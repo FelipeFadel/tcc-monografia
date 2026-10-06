@@ -33,12 +33,12 @@ Mesmo com o gitbin, o fluxo de trabalho de um artista tridimensional ainda exigi
 
 O \textit{addon} adiciona um painel lateral na \textit{viewport} 3D, apresentado na Figura~\ref{fig:painel-addon}, com os botões \textit{Save Version}, \textit{Status}, \textit{Log} e \textit{Checkout}, além de um campo para especificar a versão a ser restaurada. [O \textit{addon} aciona o gitbin como processo externo / importa o gitbin como biblioteca, e o repositório fica localizado em ...].
 
-\begin{figure}[htb]
-  \centering
-  \caption{\label{fig:painel-addon}Painel do \textit{addon} na \textit{viewport} 3D do Blender}
-  \includegraphics[width=0.5\textwidth]{figuras/painel-addon.png}
-  \fonte{Autoria própria (2026)}
-\end{figure}
+% \begin{figure}[htb]
+%   \centering
+%   \caption{\label{fig:painel-addon}Painel do \textit{addon} na \textit{viewport} 3D do Blender}
+%   \includegraphics[width=0.5\textwidth]{figuras/painel-addon.png}
+%   \fonte{Autoria própria (2026)}
+% \end{figure}
 
 Ao clicar em \textit{Save Version}, o \textit{addon} aciona automaticamente o exportador \gls{glb} do Blender e, em seguida, o comando \texttt{gitbin save}, materializando em um único clique o fluxo completo de exportação e versionamento. O \textit{Checkout}, por sua vez, restaura a versão informada e reimporta o arquivo resultante na cena, permitindo que o artista visualize imediatamente o estado anterior do modelo. [O \textit{addon} avisa / não avisa sobre alterações não salvas antes de restaurar uma versão.] Dessa forma, o método passou a ser utilizável em um fluxo real de modelagem, sem que o artista precise sair do editor.
 
