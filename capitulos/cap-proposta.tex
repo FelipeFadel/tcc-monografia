@@ -1,0 +1,23 @@
+\chapter{Proposta}\label{cap:proposta}
+
+Este trabalho propõe uma análise comparativa entre as versões HTTP/1.1, HTTP/2 e HTTP/3, com foco em suas especificações técnicas, complexidade de configuração e desempenho em diferentes contextos. O objetivo é fornecer uma compreensão aprofundada sobre como essas versões evoluíram em termos de eficiência, latência, consumo de recursos e usabilidade prática. O problema central abordado é a carência de estudos atualizados que integrem análise teórica, testes práticos com servidor Web e interpretação de dados reais de tráfego, de forma consolidada e acessível.
+
+A abordagem adotada será estruturada em três eixos principais:
+\begin{itemize}
+    \item \textbf{Estudo técnico} das RFCs que definem cada versão do protocolo, destacando as mudanças mais relevantes, como multiplexação, compressão de cabeçalho, eliminação do \textit{handshake} \gls{tcp} e uso do \gls{quic}.
+    \item \textbf{Configuração prática} de cada versão utilizando o servidor NGINX, identificando as diferenças, dificuldades e exigências específicas de cada uma.
+    \item \textbf{Avaliação de desempenho}, por meio de testes controlados e análise de relatórios existentes, que permitirão identificar os contextos em que cada versão apresenta melhor rendimento.
+\end{itemize}
+
+Adicionalmente, os resultados obtidos ao longo da pesquisa serão comparados com os dados apresentados em outros estudos relacionados, como os de Trevisan et al. \cite{trevisan2021http3}, Liu et al. \cite{liu2024http3proxy} e Balej e Sochor \cite{balej2023http3servers}. Essa comparação servirá para verificar a consistência dos achados e identificar eventuais discrepâncias, contribuindo assim para a validação dos testes realizados e para o entendimento das variações de desempenho em diferentes cenários.
+
+
+Entre os resultados esperados, destacam-se:
+\begin{itemize}
+    \item Um mapeamento das vantagens e limitações de cada versão do protocolo HTTP;
+    \item Um conjunto de observações práticas que podem auxiliar na escolha da versão mais adequada a diferentes tipos de serviços;
+    \item A consolidação de informações dispersas em documentos técnicos e estudos, tornando-as acessíveis e aplicáveis tanto na academia quanto no mercado;
+    \item A verificação empírica da compatibilidade entre os dados obtidos nesta pesquisa e os apresentados por trabalhos anteriores.
+\end{itemize}
+
+Por fim, o público-alvo da pesquisa inclui desenvolvedores web, administradores de sistemas, pesquisadores e profissionais da área de redes e infraestrutura. Além disso, a comunidade acadêmica pode se beneficiar dos resultados como base para estudos futuros que envolvam protocolos de transporte e desempenho em aplicações web.

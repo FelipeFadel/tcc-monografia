@@ -1,0 +1,87 @@
+\chapter{considerações finais}\label{cap:conclusao}
+
+Este trabalho investigou as limitações dos mecanismos tradicionais de versionamento
+no tratamento de arquivos binários, com ênfase no contexto do desenvolvimento de
+jogos digitais. A análise evidenciou que ferramentas consolidadas como o
+\gls{gitlfs}, embora amplamente adotadas na indústria, tratam arquivos binários como
+unidades opacas e indivisíveis, resultando no armazenamento integral do arquivo a
+cada nova versão. A identificação do formato \gls{glb} como objeto de estudo
+adequado demonstrou que formatos binários com estrutura interna segmentada,
+\textit{offsets} explícitos e ausência de compressão global apresentam
+características que viabilizam o versionamento diferencial por blocos,
+distinguindo-se de formatos que tornaram essa abordagem ineficiente, como arquivos
+compactados.
+
+A investigação das técnicas \gls{cow} e \gls{row}, bem como do sistema de arquivos
+\gls{btrfs}, permitiu compreender como essas abordagens podem ser aplicadas ao
+problema do versionamento diferencial de arquivos binários. A arquitetura de
+árvores-B do \gls{btrfs}, combinada ao mecanismo de \textit{shadow paging},
+mostrou-se adequada para o problema proposto, onde a criação de um
+\textit{snapshot} equivale ao registro de um novo ponteiro raiz, operação de custo
+constante independente do volume de dados, e o compartilhamento físico de blocos
+inalterados entre versões consecutivas ocorre de forma nativa, sem duplicação em
+disco. Esses conceitos fundamentaram as decisões de projeto da camada física do
+método desenvolvido.
+
+A abordagem proposta foi desenvolvida em duas camadas complementares. Na camada
+lógica, um módulo implementado realiza a leitura e decomposição do arquivo
+\gls{glb}, extrai as \textit{bufferViews} como unidades de versionamento, calcula
+assinaturas por segmento e executa a detecção diferencial entre versões
+consecutivas, encaminhando para gravação apenas os segmentos classificados como
+novos ou modificados. Na camada física, o \gls{btrfs} recebe esses segmentos no
+subvolume ativo e, ao término de cada operação, captura um \textit{snapshot}
+imutável que preserva o estado completo da versão com custo proporcional
+exclusivamente ao volume de dados alterado.
+
+A avaliação comparativa com o \gls{gitlfs}, conduzida em ambientes virtualizados
+isolados com configurações de \textit{hardware} idênticas, produziu resultados
+parciais que validam a viabilidade da abordagem. No experimento com variação da
+quantidade de \textit{bufferViews} modificadas, o método proposto alcançou economias
+que variaram de 98,25\%, quando apenas uma \textit{bufferView} foi alterada, a
+9,31\% no cenário de modificação integral dos atributos de vértice, enquanto o
+\gls{gitlfs} manteve crescimento constante de aproximadamente 42,9 MB por versão em
+todos os cenários. Ao final de oito versões, o armazenamento acumulado foi de
+aproximadamente 211 MB no método proposto contra 344 MB no \gls{gitlfs},
+representando uma redução de 38,6\% no consumo total de espaço em disco.
+
+Os resultados parciais obtidos são promissores e permitem especular aplicações
+concretas do método em diferentes contextos. Na indústria de jogos digitais por
+exemplo, estúdios que mantêm repositórios com centenas de modelos \gls{glb}
+modificados diariamente por equipes de artistas se beneficiariam diretamente ao ver
+o cenário onde uma alteração pequena gravou apenas 750 KB em vez de 42,9 MB, uma
+economia de 98\%. Times com dezenas de artistas realizando \textit{commits}
+simultâneos representam uma diferença expressiva no consumo acumulado de banda e
+armazenamento ao longo do ciclo de produção. Em \textit{pipelines} de integração e
+entrega contínua para ativos 3D, onde versões de modelos precisam ser validadas
+automaticamente a cada alteração, apenas os segmentos modificados precisam ser
+transferidos entre máquinas, reduzindo o tempo de propagação. Em ambientes de
+colaboração remota com largura de banda limitada, a diferença entre transferir 750
+KB e 42 MB por \textit{commit} representa a viabilidade ou inviabilidade do fluxo de
+trabalho.
+
+Por fim, o método proposto não busca se restringir ao formato \gls{glb}, qualquer
+formato binário com estrutura interna segmentada e \textit{offsets} explícitos
+apresenta as condições necessárias para sua aplicação. Estudos futuros podem avaliar
+sua extensão a outros formatos amplamente utilizados na indústria, como o
+\gls{vdb} inicialmente, formato volumétrico adotado em simulações de fluidos e
+efeitos visuais. Nesse contexto, experimentos comparativos entre volumes \gls{btrfs}
+e ext4 permitiriam isolar o impacto do sistema de arquivos das demais variáveis do
+método, com a coleta de métricas de entrada e saída em nível de disco por meio da
+ferramenta \texttt{iostat} \cite{Godard1999}, possibilitando uma análise mais
+granular do comportamento de escrita e leitura durante as operações de
+versionamento.
+
+Por fim, o método proposto não busca se restringir ao formato \gls{glb}, qualquer
+formato binário com estrutura interna segmentada e \textit{offsets} explícitos
+apresenta as condições necessárias para sua aplicação. Estudos futuros podem avaliar
+sua extensão a outros formatos amplamente utilizados na indústria, como o
+\gls{vdb}\footnote{\textit{Volumetric Dynamic B plus tree} (VDB), é uma estrutura de
+dados hierárquica desenvolvida para representação eficiente de volumes esparsos e
+dinâmicos em alta resolução, amplamente adotada na indústria de efeitos visuais
+\cite{Museth2013}.} inicialmente, formato volumétrico adotado em simulações de
+fluidos e efeitos visuais. Nesse contexto, experimentos comparativos entre volumes
+\gls{btrfs} e ext4 permitiriam isolar o impacto do sistema de arquivos das demais
+variáveis do método, com a coleta de métricas de entrada e saída em nível de disco
+por meio da ferramenta \texttt{iostat} \cite{Godard1999}, possibilitando uma análise
+mais granular do comportamento de escrita e leitura durante as operações de
+versionamento.
